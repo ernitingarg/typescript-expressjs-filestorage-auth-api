@@ -1,8 +1,9 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import { userRouter } from "./users/user.routes";
+import { StatusCodes } from "http-status-codes";
 
 dotenv.config();
 
@@ -14,7 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 
-app.use("/", userRouter);
+app.get("/healthcheck", async (_req: Request, res: Response) => {
+  return res.status(StatusCodes.OK).json({ msg: "OK" });
+});
+app.use("/api", userRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at port ${port}`);
